@@ -1,0 +1,68 @@
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+class Recipe extends Component{
+
+    constructor(props) {
+        // Pass props to parent class
+        super(props);
+        // Set initial state
+        this.state = {
+          orderPlaced :false
+        };
+      }
+
+    
+    componentWillUnmount() {
+         if(this.refs.shipping.checked)
+              this.props.substractShipping()
+    }
+
+    handleChecked = (e)=>{
+        if(e.target.checked){
+            this.props.addShipping();
+        }
+        else{
+            this.props.substractShipping();
+        }
+    }
+
+    handleCheckout = (e) => {
+        console.log("Order Placed ,......");
+    }
+
+    render(){
+  
+        return(
+            <div className="container">
+                <div className="collection">
+                    <li className="collection-item">
+                            <label>
+                                <input type="checkbox" ref="shipping" onChange= {this.handleChecked} />
+                                <span>Shipping(+6$)</span>
+                            </label>
+                        </li>
+                        <li className="collection-item"><b>Total: {this.props.total} $</b></li>
+                    </div>
+                    <div className="checkout">
+                        <button className="waves-effect waves-light btn" onChange= {this.handleChecked} >Checkout</button>
+                    </div>
+                 </div>
+        )
+    }
+}
+
+const mapStateToProps = (state)=>{
+    return{
+        addedItems: state.addedItems,
+        total: state.total
+    }
+}
+
+const mapDispatchToProps = (dispatch)=>{
+    return{
+        addShipping: ()=>{dispatch({type: 'ADD_SHIPPING'})},
+        substractShipping: ()=>{dispatch({type: 'SUB_SHIPPING'})}
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Recipe)
